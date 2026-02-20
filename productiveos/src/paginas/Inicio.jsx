@@ -1,20 +1,31 @@
 // Inicio.jsx
-// Pantalla inicial temporal.
-// Aquí luego mostraremos el "Panel" con los módulos.
-import { Link } from "react-router-dom";
+// Temporalmente, esta página actúa como "panel".
+// En la Issue 4 pondremos aquí las tarjetas de módulos.
+
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../servicios/supabaseCliente";
+import { useSesion } from "../servicios/SesionContexto";
 
 export default function Inicio() {
+  const navigate = useNavigate();
+  const { sesion } = useSesion();
+
+  async function cerrarSesion() {
+    await supabase.auth.signOut();
+    navigate("/acceso", { replace: true });
+  }
+
   return (
     <main className="contenedor">
       <h1 className="titulo">PuertoTask</h1>
+
       <p className="texto">
-        Base del proyecto lista. Esta es la página de inicio.
+        Sesión iniciada como: <strong>{sesion?.user?.email}</strong>
       </p>
 
-      {/* Enlace de prueba para comprobar que el router funciona */}
-      <Link className="boton" to="/acceso">
-        Ir a Acceso
-      </Link>
+      <button className="boton" onClick={cerrarSesion}>
+        Cerrar sesión
+      </button>
     </main>
   );
 }
